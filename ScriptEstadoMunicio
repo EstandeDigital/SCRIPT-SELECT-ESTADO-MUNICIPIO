@@ -1,0 +1,33 @@
+ jQuery().ready(function(){
+
+            jQuery.get("https://servicodados.ibge.gov.br/api/v1/localidades/estados/", function( dados ) {
+                 var i = -1;
+                 jQuery.each(dados, function() {
+                 i++;
+                 jQuery('#billing_country').append(jQuery('<option>', { 
+                   value: dados[i].id,
+                   text : dados[i].nome
+                }));
+
+            });
+
+             jQuery('#billing_country').on('change', function() {
+                    jQuery("#cidade").removeAttr("disabled");
+                    jQuery('#cidade').find('option:not(:first)').remove();
+                    jQuery.get("https://servicodados.ibge.gov.br/api/v1/localidades/estados/"+this.value+"/municipios", function( data ) {
+                     console.log(data);
+                     var i = -1;
+                     jQuery.each(data, function() {
+                         i++;
+                     //console.log(data[i].sigla);
+                     jQuery('#cidade').append(jQuery('<option>', { 
+                     value: data[i].nome,
+                     text : data[i].nome 
+                }));
+             });
+           });
+         });
+      })
+
+       
+})
