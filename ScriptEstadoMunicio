@@ -1,19 +1,19 @@
- jQuery().ready(function(){
+jQuery().ready(function(){
 
             jQuery.get("https://servicodados.ibge.gov.br/api/v1/localidades/estados/", function( dados ) {
                  var i = -1;
                  jQuery.each(dados, function() {
                  i++;
-                 jQuery('#billing_country').append(jQuery('<option>', { 
-                   value: dados[i].id,
+                 jQuery('#fld_1661962_1').append(jQuery('<option>', { 
+                   value: dados[i].nome,
                    text : dados[i].nome
-                }));
+                }).attr('data-id', dados[i].id));
 
             });
   
  
             //Ordenar Estados por ordem alfabetica
-                    var sel = jQuery('#billing_country');
+                    var sel = jQuery('#fld_1661962_1');
                     var selected = sel.val(); // cache selected value, before reordering
                     var opts_list = sel.find('option');
                     opts_list.sort(function(a, b) { return jQuery(a).text() > jQuery(b).text() ? 1 : -1; });
@@ -21,16 +21,18 @@
                     sel.val(selected); // set cached selected value
                     
 
-             jQuery('#billing_country').on('change', function() {
-                    jQuery("#cidade").removeAttr("disabled");
-                    jQuery('#cidade').find('option:not(:first)').remove();
-                    jQuery.get("https://servicodados.ibge.gov.br/api/v1/localidades/estados/"+this.value+"/municipios", function( data ) {
+             jQuery('#fld_1661962_1').on('change', function() {
+                   jQuery("#fld_1661962_1").removeAttr("disabled");
+                   jQuery("#fld_9865720_1").find('option:not(:first)').remove();
+                   
+                  
+                    jQuery.get("https://servicodados.ibge.gov.br/api/v1/localidades/estados/"+ jQuery('#fld_1661962_1 option[value='+ jQuery(this).val()+']').data("id") +"/municipios", function( data ) {
                      console.log(data);
                      var i = -1;
                      jQuery.each(data, function() {
                          i++;
-                     //console.log(data[i].sigla);
-                     jQuery('#cidade').append(jQuery('<option>', { 
+                    console.log(data[i].sigla);
+                     jQuery('#fld_9865720_1').append(jQuery('<option>', { 
                      value: data[i].nome,
                      text : data[i].nome 
                 }));
@@ -38,6 +40,5 @@
            });
          });
       })
-
-       
 })
+
